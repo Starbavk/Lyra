@@ -51,6 +51,13 @@ export async function startWhatsAppBot(): Promise<void> {
 
     if (connection === 'open') {
       console.log('\n✅ WhatsApp connected! Bot siap dipakai.\n')
+      const owner = process.env.OWNER_NUMBER
+      if (owner && sock) {
+        const jid = owner + '@s.whatsapp.net'
+        sock.sendMessage(jid, { text: '✨ Lyra siap! Kirim "Halo" untuk mulai.' })
+          .then(() => console.log('📤 Welcome message sent to', jid))
+          .catch(e => console.log('📤 Gagal kirim welcome:', e.message))
+      }
     }
 
     if (connection === 'close') {
@@ -75,26 +82,28 @@ export async function startWhatsAppBot(): Promise<void> {
 
   const ownerNumber = process.env.OWNER_NUMBER || ''
 
-  sock.ev.on('messages.upsert', async ({ messages }) => {
+  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+    console.log('📨 Event messages.upsert type:', type, 'count:', messages.length)
     for (const msg of messages) {
       try {
+        const fromMe = msg.key?.fromMe
+        const jid = msg.key?.remoteJid
+        const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '(media/non-text)'
+        console.log(`  📩 fromMe:${fromMe} jid:${jid} text:${text}`)
+
         if (!msg.key || !msg.message) continue
-
-        const jid = msg.key.remoteJid
         if (!jid || jid.endsWith('@g.us')) continue
-        if (ownerNumber && !jid.startsWith(ownerNumber)) continue
 
-        const text = msg.message.conversation ||
-          msg.message.extendedTextMessage?.text ||
-          ''
+        const msgText = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
+        if (!msgText.trim()) continue
 
-        if (!text.trim()) continue
+        if (ownerNumber && !jid.startsWith(ownerNumber) && !(fromMe && ownerNumber && jid.startsWith(ownerNumber))) continue
 
-        console.log('📩 Pesan dari', jid, ':', text)
+        console.log('✅ Memproses:', msgText)
 
         const pushName = msg.pushName || 'User'
         const user = db.getOrCreateUser(jid, pushName)
-        const ctx: MessageContext = { user, message: text.trim(), senderName: pushName }
+        const ctx: MessageContext = { user, message: msgText.trim(), senderName: pushName }
 
         await sock!.sendMessage(jid, { text: 'Tunggu ya, lagi diproses...' })
 
