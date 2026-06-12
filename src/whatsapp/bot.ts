@@ -1,5 +1,6 @@
 import makeWASocket, { useMultiFileAuthState, DisconnectReason, type WASocket, fetchLatestBaileysVersion } from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
+import qrcode from 'qrcode-terminal'
 import path from 'path'
 import fs from 'fs'
 import pino from 'pino'
@@ -27,7 +28,6 @@ export async function startWhatsAppBot(): Promise<void> {
   sock = makeWASocket({
     version,
     auth: state,
-    printQRInTerminal: true,
     logger: pino({ level: 'warn' }),
     browser: ['Lyra', 'Chrome', '3.0'],
     syncFullHistory: true,
@@ -42,9 +42,11 @@ export async function startWhatsAppBot(): Promise<void> {
 
     if (qr) {
       console.log('\n============================================')
-      console.log('📱 SCAN QR CODE DI ATAS dengan WhatsApp HP!')
-      console.log('Buka WhatsApp > Settings > Linked Devices')
+      console.log('📱 SCAN QR CODE INI dengan WhatsApp HP!')
+      console.log('Buka WhatsApp > Settings > Linked Devices > Link a Device')
       console.log('============================================\n')
+      qrcode.generate(qr, { small: true })
+      console.log('\n')
     }
 
     if (connection === 'open') {
