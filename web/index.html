@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lyra — Asisten AI Pribadi Lewat WhatsApp</title>
+  <meta name="description" content="Lyra adalah asisten AI pribadi lewat WhatsApp. Atur jadwal, ingetin meeting, catat todo, simpan catatan — cukup chat.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#faf5ff', 100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe', 400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7e22ce', 800: '#6b21a8', 900: '#581c87' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased">
+  <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">⭐</span>
+        <span class="font-bold text-xl text-gray-900">Lyra</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium">Fitur</a>
+        <a href="#how" class="text-gray-600 hover:text-gray-900 text-sm font-medium">Cara Pakai</a>
+        <a href="https://wa.me/6287889681231" target="_blank" class="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition">
+          Mulai Chat
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+        Online 24 Jam
+      </div>
+      <h1 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
+        Asisten AI Pribadi<br>
+        <span class="bg-gradient-to-r from-primary-600 to-purple-400 bg-clip-text text-transparent">Lewat WhatsApp</span>
+      </h1>
+      <p class="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
+        Atur jadwal, ingetin meeting, catat todo, simpan catatan penting —<br>
+        cukup chat seperti ngobrol sama teman. Tanpa install aplikasi baru.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://wa.me/6287889681231" target="_blank" class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3.5 rounded-full text-lg font-semibold transition shadow-lg shadow-primary-200">
+          Mulai Chat via WhatsApp
+        </a>
+        <a href="#features" class="border border-gray-200 hover:border-gray-300 text-gray-700 px-8 py-3.5 rounded-full text-lg font-semibold transition">
+          Lihat Fitur
+        </a>
+      </div>
+      <p class="text-sm text-gray-400 mt-4">Gratis, tanpa daftar, tanpa download aplikasi</p>
+    </div>
+  </section>
+
+  <section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Satu Chat, Banyak Bisa</h2>
+        <p class="text-gray-500 max-w-xl mx-auto">Semua fitur asisten pribadi — beres dari satu chat WhatsApp.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">⏰</div>
+          <h3 class="font-bold text-lg mb-2">Pengingat Pintar</h3>
+          <p class="text-gray-500 text-sm">"Ingetin gw meeting tim jam 2" — Lyra otomatis kirim pengingat ke WhatsApp pas waktunya.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">📋</div>
+          <h3 class="font-bold text-lg mb-2">To-Do List</h3>
+          <p class="text-gray-500 text-sm">Tambah task, atur prioritas, cek deadline — semua dari chat. "Apa aja task yang belum?"</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">📝</div>
+          <h3 class="font-bold text-lg mb-2">Catatan & Kontak</h3>
+          <p class="text-gray-500 text-sm">Simpen ide, kontak, atau catatan penting. Cari tinggal bilang "cari catatan tentang..."</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">🎭</div>
+          <h3 class="font-bold text-lg mb-2">Dua Kepribadian</h3>
+          <p class="text-gray-500 text-sm">Butuh yang formal? Atau yang santai kayak temen? Tinggal bilang "mode santai" atau "mode kerja".</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">📎</div>
+          <h3 class="font-bold text-lg mb-2">Ringkas File</h3>
+          <p class="text-gray-500 text-sm">Kirim file PDF/DOCX, Lyra baca dan kirim ringkasannya balik ke WhatsApp kamu.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+          <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center mb-4 text-xl">🔗</div>
+          <h3 class="font-bold text-lg mb-2">Integrasi Google</h3>
+          <p class="text-gray-500 text-sm">Nyambung ke Google Calendar & Drive. Jadwal otomatis sync, file tersimpan rapi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Gampang Banget</h2>
+        <p class="text-gray-500 max-w-xl mx-auto">Cukup 3 langkah, asisten pribadimu siap di WhatsApp.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div class="text-center">
+          <div class="w-14 h-14 bg-primary-100 text-primary-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+          <h3 class="font-bold text-lg mb-2">Save Nomor Lyra</h3>
+          <p class="text-gray-500 text-sm">Simpan nomor Lyra di kontak, buka WhatsApp. Ga perlu install app baru.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-primary-100 text-primary-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+          <h3 class="font-bold text-lg mb-2">Chat atau Bilang</h3>
+          <p class="text-gray-500 text-sm">Ketik "ingetin meeting jam 2" atau "catetin jajan 25rb". Lyra ngerti.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-primary-100 text-primary-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+          <h3 class="font-bold text-lg mb-2">Lyra Urusin</h3>
+          <p class="text-gray-500 text-sm">Reminder, catatan, todo — semuanya beres. Kirim balik ke WhatsApp kamu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 px-6 bg-gradient-to-br from-primary-600 to-purple-700 text-white text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Siap Punya Asisten Pribadi?</h2>
+      <p class="text-purple-200 mb-8 text-lg">Tanpa install. Tanpa daftar. Cukup chat di WhatsApp.</p>
+      <a href="https://wa.me/6287889681231" target="_blank" class="inline-block bg-white text-primary-700 hover:bg-purple-50 px-8 py-3.5 rounded-full text-lg font-semibold transition shadow-lg">
+        Mulai Chat via WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <footer class="py-12 px-6 border-t border-gray-100">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 text-gray-500">
+        <span class="text-lg">⭐</span>
+        <span class="font-semibold">Lyra</span>
+      </div>
+      <p class="text-gray-400 text-sm">&copy; 2026 Lyra. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
