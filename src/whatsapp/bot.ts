@@ -77,29 +77,35 @@ export async function startWhatsAppBot(): Promise<void> {
 
   sock.ev.on('messages.upsert', async ({ messages }) => {
     for (const msg of messages) {
-      if (!msg.key || !msg.message) continue
-
-      const jid = msg.key.remoteJid
-      if (!jid || jid.endsWith('@g.us')) continue
-
-      if (ownerNumber && !jid.startsWith(ownerNumber)) continue
-
-      const text = msg.message.conversation ||
-        msg.message.extendedTextMessage?.text ||
-        ''
-
-      if (!text.trim()) continue
-
-      const pushName = msg.pushName || 'User'
-
       try {
+        if (!msg.key || !msg.message) continue
+
+        const jid = msg.key.remoteJid
+        if (!jid || jid.endsWith('@g.us')) continue
+        if (ownerNumber && !jid.startsWith(ownerNumber)) continue
+
+        const text = msg.message.conversation ||
+          msg.message.extendedTextMessage?.text ||
+          ''
+
+        if (!text.trim()) continue
+
+        console.log('📩 Pesan dari', jid, ':', text)
+
+        const pushName = msg.pushName || 'User'
         const user = db.getOrCreateUser(jid, pushName)
         const ctx: MessageContext = { user, message: text.trim(), senderName: pushName }
+
+        await sock!.sendMessage(jid, { text: 'Tunggu ya, lagi diproses...' })
+
         const reply = await processUserMessage(ctx)
         await sock!.sendMessage(jid, { text: reply })
-      } catch (err) {
-        console.error('Error processing message:', err)
-        await sock!.sendMessage(jid, { text: 'Maaf, ada error. Coba lagi ya.' })
+      } catch (err: any) {
+        console.error('❌ Error:', err?.message || err)
+        try {
+          const jid = msg?.key?.remoteJid
+          if (jid) await sock?.sendMessage(jid, { text: 'Maaf, ada error. Coba lagi ya.' })
+        } catch {}
       }
     }
   })

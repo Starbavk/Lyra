@@ -6,6 +6,19 @@ function getGenAI(): GoogleGenerativeAI {
   return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 }
 
+export async function testGeminiKey(): Promise<boolean> {
+  try {
+    const genAI = getGenAI()
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: 'Balas "OK" saja' }] }] })
+    console.log('✅ Gemini API: OK')
+    return true
+  } catch (err: any) {
+    console.error('❌ Gemini API Error:', err.message)
+    return false
+  }
+}
+
 export async function processMessage(ctx: MessageContext): Promise<AIAction> {
   const systemPrompt = getSystemPrompt(ctx.user.personality, process.env.BOT_NAME || 'Lyra')
   const genAI = getGenAI()
