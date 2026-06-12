@@ -73,13 +73,19 @@ export async function startWhatsAppBot(): Promise<void> {
 
   sock.ev.on('creds.update', saveCreds)
 
+  const ownerNumber = process.env.OWNER_NUMBER || ''
+
   sock.ev.on('messages.upsert', async ({ messages }) => {
     for (const msg of messages) {
       if (!msg.key || msg.key.fromMe) continue
       if (!msg.message) continue
 
       const jid = msg.key.remoteJid
-      if (!jid) continue
+      if (!jid || jid.endsWith('@g.us')) continue // skip grup
+
+      if (ownerNumber && !jid.startsWith(ownerNumber)) {
+        continue // cuma layani owner
+      }
 
       const text = msg.message.conversation ||
         msg.message.extendedTextMessage?.text ||
