@@ -1,4 +1,4 @@
-import { processMessage, generateResponse } from '../ai/engine.js'
+import { processMessage } from '../ai/engine.js'
 import * as db from '../database/index.js'
 import type { AIAction, MessageContext } from '../types/index.js'
 import dayjs from 'dayjs'

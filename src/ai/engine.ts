@@ -1,68 +1,58 @@
-import OpenAI from 'openai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getSystemPrompt, getFunctionDefinitions } from './personality.js'
 import type { AIAction, MessageContext, Personality } from '../types/index.js'
 
-function getOpenAI(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+function getGenAI(): GoogleGenerativeAI {
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 }
 
 export async function processMessage(ctx: MessageContext): Promise<AIAction> {
   const systemPrompt = getSystemPrompt(ctx.user.personality, process.env.BOT_NAME || 'Lyra')
-
-  const response = await getOpenAI().chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: `${ctx.senderName}: ${ctx.message}` }
-    ],
-    tools: getFunctionDefinitions().map(fn => ({ type: 'function' as const, function: fn })),
-    tool_choice: 'auto',
-    temperature: ctx.user.personality === 'casual' ? 0.8 : 0.4,
-    max_tokens: 500
+  const genAI = getGenAI()
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-2.0-flash',
+    systemInstruction: systemPrompt,
+    tools: [{
+      functionDeclarations: getFunctionDefinitions() as any
+    }]
   })
 
-  const choice = response.choices[0]
+  const result = await model.generateContent({
+    contents: [{ role: 'user', parts: [{ text: `${ctx.senderName}: ${ctx.message}` }] }],
+    generationConfig: {
+      temperature: ctx.user.personality === 'casual' ? 0.8 : 0.4,
+      maxOutputTokens: 500
+    }
+  })
 
-  if (choice.finish_reason === 'tool_calls' && choice.message.tool_calls) {
-    const toolCall = choice.message.tool_calls[0]
-    const args = JSON.parse(toolCall.function.arguments)
+  const response = result.response
+  const call = response.functionCalls()
 
-    switch (toolCall.function.name) {
+  if (call && call.length > 0) {
+    const fn = call[0]
+    const args = fn.args as Record<string, string>
+
+    switch (fn.name) {
       case 'create_reminder':
-        return { type: 'create_reminder', message: args.message, remind_at: args.remind_at, recurring: args.recurring }
+        return { type: 'create_reminder', message: String(args.message || ''), remind_at: String(args.remind_at || ''), recurring: args.recurring as string | undefined }
       case 'create_todo':
-        return { type: 'create_todo', title: args.title, priority: args.priority, due_date: args.due_date }
+        return { type: 'create_todo', title: String(args.title || ''), priority: args.priority as string | undefined, due_date: args.due_date as string | undefined }
       case 'save_note':
-        return { type: 'save_note', title: args.title, content: args.content, category: args.category }
+        return { type: 'save_note', title: String(args.title || ''), content: String(args.content || ''), category: args.category as string | undefined }
       case 'list_todos':
-        return { type: 'list_todos', status: args.status }
+        return { type: 'list_todos', status: args.status as string | undefined }
       case 'list_reminders':
-        return { type: 'list_reminders', status: args.status }
+        return { type: 'list_reminders', status: args.status as string | undefined }
       case 'list_notes':
-        return { type: 'list_notes', query: args.query }
+        return { type: 'list_notes', query: args.query as string | undefined }
       case 'complete_todo':
-        return { type: 'complete_todo', query: args.query }
+        return { type: 'complete_todo', query: args.query as string | undefined }
       case 'switch_personality':
-        return { type: 'switch_personality', mode: args.mode as Personality }
+        return { type: 'switch_personality', mode: (args.mode || 'casual') as Personality }
       default:
         return { type: 'chat', response: 'Maaf, saya tidak bisa melakukan itu.' }
     }
   }
 
-  return { type: 'chat', response: choice.message.content || '' }
-}
-
-export async function generateResponse(userMessage: string, context: string, personality: Personality): Promise<string> {
-  const openai = getOpenAI()
-  const systemPrompt = getSystemPrompt(personality, process.env.BOT_NAME || 'Lyra')
-  const fullPrompt = `${systemPrompt}\n\nKonteks:\n${context}\n\nUser: ${userMessage}`
-
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [{ role: 'user', content: fullPrompt }],
-    temperature: personality === 'casual' ? 0.8 : 0.4,
-    max_tokens: 500
-  })
-
-  return response.choices[0].message.content || ''
+  return { type: 'chat', response: response.text() || '' }
 }

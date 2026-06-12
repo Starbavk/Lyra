@@ -1,4 +1,5 @@
 import type { Personality } from '../types/index.js'
+import { SchemaType } from '@google/generative-ai'
 
 export function getSystemPrompt(mode: Personality, botName: string): string {
   return mode === 'professional'
@@ -59,11 +60,11 @@ export function getFunctionDefinitions() {
       name: 'create_reminder',
       description: 'Buat pengingat/reminder untuk user',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          message: { type: 'string', description: 'Pesan reminder' },
-          remind_at: { type: 'string', description: 'Waktu reminder dalam format ISO datetime. Contoh: 2026-06-12T14:00:00+07:00' },
-          recurring: { type: 'string', enum: ['daily', 'weekly', 'monthly'], description: 'Opsional: ulangi reminder' }
+          message: { type: SchemaType.STRING, description: 'Pesan reminder' },
+          remind_at: { type: SchemaType.STRING, description: 'Waktu reminder dalam format ISO datetime. Contoh: 2026-06-12T14:00:00+07:00' },
+          recurring: { type: SchemaType.STRING, enum: ['daily', 'weekly', 'monthly'], description: 'Opsional: ulangi reminder' }
         },
         required: ['message', 'remind_at']
       }
@@ -72,11 +73,11 @@ export function getFunctionDefinitions() {
       name: 'create_todo',
       description: 'Buat to-do list item baru',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          title: { type: 'string', description: 'Nama task' },
-          priority: { type: 'string', enum: ['low', 'normal', 'high'], description: 'Prioritas task' },
-          due_date: { type: 'string', description: 'Deadline dalam format ISO datetime' }
+          title: { type: SchemaType.STRING, description: 'Nama task' },
+          priority: { type: SchemaType.STRING, enum: ['low', 'normal', 'high'], description: 'Prioritas task' },
+          due_date: { type: SchemaType.STRING, description: 'Deadline dalam format ISO datetime' }
         },
         required: ['title']
       }
@@ -85,11 +86,11 @@ export function getFunctionDefinitions() {
       name: 'save_note',
       description: 'Simpan catatan atau kontak',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          title: { type: 'string', description: 'Judul catatan / nama kontak' },
-          content: { type: 'string', description: 'Isi catatan / detail kontak' },
-          category: { type: 'string', description: 'Kategori: notes, contacts, atau lainnya' }
+          title: { type: SchemaType.STRING, description: 'Judul catatan / nama kontak' },
+          content: { type: SchemaType.STRING, description: 'Isi catatan / detail kontak' },
+          category: { type: SchemaType.STRING, description: 'Kategori: notes, contacts, atau lainnya' }
         },
         required: ['title', 'content']
       }
@@ -98,9 +99,9 @@ export function getFunctionDefinitions() {
       name: 'list_todos',
       description: 'Tampilkan daftar to-do list',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          status: { type: 'string', enum: ['pending', 'done'], description: 'Filter status task' }
+          status: { type: SchemaType.STRING, enum: ['pending', 'done'], description: 'Filter status task' }
         }
       }
     },
@@ -108,9 +109,9 @@ export function getFunctionDefinitions() {
       name: 'list_reminders',
       description: 'Tampilkan daftar reminder',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          status: { type: 'string', enum: ['pending', 'done'], description: 'Filter status reminder' }
+          status: { type: SchemaType.STRING, enum: ['pending', 'done'], description: 'Filter status reminder' }
         }
       }
     },
@@ -118,9 +119,9 @@ export function getFunctionDefinitions() {
       name: 'list_notes',
       description: 'Cari atau tampilkan catatan',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          query: { type: 'string', description: 'Kata kunci pencarian' }
+          query: { type: SchemaType.STRING, description: 'Kata kunci pencarian' }
         }
       }
     },
@@ -128,9 +129,9 @@ export function getFunctionDefinitions() {
       name: 'complete_todo',
       description: 'Tandai todo sebagai selesai',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          query: { type: 'string', description: 'Judul task yang mau ditandai selesai' }
+          query: { type: SchemaType.STRING, description: 'Judul task yang mau ditandai selesai' }
         },
         required: ['query']
       }
@@ -139,9 +140,9 @@ export function getFunctionDefinitions() {
       name: 'switch_personality',
       description: 'Ganti mode kepribadian asisten',
       parameters: {
-        type: 'object',
+        type: SchemaType.OBJECT,
         properties: {
-          mode: { type: 'string', enum: ['casual', 'professional'], description: 'Mode kepribadian: casual (santai) atau professional (formal)' }
+          mode: { type: SchemaType.STRING, enum: ['casual', 'professional'], description: 'Mode kepribadian: casual (santai) atau professional (formal)' }
         },
         required: ['mode']
       }
