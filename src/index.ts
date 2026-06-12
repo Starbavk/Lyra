@@ -7,7 +7,7 @@ import { startScheduler } from './scheduler/index.js'
 import { startApiServer } from './api/server.js'
 
 async function main(): Promise<void> {
-  console.log('🚀 Memoris - Asisten AI Pribadi via WhatsApp')
+  console.log('🚀 Lyra - Asisten AI Pribadi via WhatsApp')
   console.log('==========================================')
 
   if (!process.env.OPENAI_API_KEY) {

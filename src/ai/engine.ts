@@ -7,7 +7,7 @@ function getOpenAI(): OpenAI {
 }
 
 export async function processMessage(ctx: MessageContext): Promise<AIAction> {
-  const systemPrompt = getSystemPrompt(ctx.user.personality, process.env.BOT_NAME || 'Memoris')
+  const systemPrompt = getSystemPrompt(ctx.user.personality, process.env.BOT_NAME || 'Lyra')
 
   const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o-mini',
@@ -54,7 +54,7 @@ export async function processMessage(ctx: MessageContext): Promise<AIAction> {
 
 export async function generateResponse(userMessage: string, context: string, personality: Personality): Promise<string> {
   const openai = getOpenAI()
-  const systemPrompt = getSystemPrompt(personality, process.env.BOT_NAME || 'Memoris')
+  const systemPrompt = getSystemPrompt(personality, process.env.BOT_NAME || 'Lyra')
   const fullPrompt = `${systemPrompt}\n\nKonteks:\n${context}\n\nUser: ${userMessage}`
 
   const response = await openai.chat.completions.create({

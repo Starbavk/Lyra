@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, '../../web')))
 
 export function startApiServer(port: number): void {
   app.get('/health', (_req: Request, res: Response) => {
-    res.json({ status: 'ok', bot: 'Memoris', version: '0.1.0' })
+    res.json({ status: 'ok', bot: 'Lyra', version: '0.1.0' })
   })
 
   app.get('/api/users/:jid', (req: Request, res: Response) => {

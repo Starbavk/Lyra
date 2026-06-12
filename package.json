@@ -1,7 +1,7 @@
 {
   "name": "memoris",
   "version": "0.1.0",
-  "description": "Memoris - Asisten AI Pribadi via WhatsApp",
+  "description": "Lyra - Asisten AI Pribadi via WhatsApp",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
