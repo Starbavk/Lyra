@@ -1,6 +1,5 @@
-import makeWASocket, { useMultiFileAuthState, DisconnectReason, type WASocket } from '@whiskeysockets/baileys'
+import makeWASocket, { useMultiFileAuthState, DisconnectReason, type WASocket, fetchLatestBaileysVersion } from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
-import qrcode from 'qrcode-terminal'
 import path from 'path'
 import fs from 'fs'
 import pino from 'pino'
@@ -22,36 +21,51 @@ export async function startWhatsAppBot(): Promise<void> {
   }
 
   const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
+  const { version, isLatest } = await fetchLatestBaileysVersion()
+  console.log(`📱 WA Protocol v${version.join('.')} (latest: ${isLatest})`)
 
   sock = makeWASocket({
+    version,
     auth: state,
-    printQRInTerminal: false,
-    logger: pino({ level: 'silent' }),
-    browser: ['Memoris', 'Chrome', '3.0']
+    printQRInTerminal: true,
+    logger: pino({ level: 'warn' }),
+    browser: ['Lyra', 'Chrome', '3.0'],
+    syncFullHistory: true,
+    markOnlineOnConnect: false,
+    keepAliveIntervalMs: 30000,
+    generateHighQualityLinkPreview: false,
+    connectTimeoutMs: 30000
   })
 
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect, qr } = update
 
     if (qr) {
-      console.log('\n📱 Scan QR code ini dengan WhatsApp kamu:\n')
-      qrcode.generate(qr, { small: true })
-      console.log('\nBuka WhatsApp > Settings > Linked Devices > Link a Device\n')
+      console.log('\n============================================')
+      console.log('📱 SCAN QR CODE DI ATAS dengan WhatsApp HP!')
+      console.log('Buka WhatsApp > Settings > Linked Devices')
+      console.log('============================================\n')
     }
 
     if (connection === 'open') {
-      console.log('✅ WhatsApp connected!')
+      console.log('\n✅ WhatsApp connected! Bot siap dipakai.\n')
     }
 
     if (connection === 'close') {
-      const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-      console.log('❌ WhatsApp disconnected:', lastDisconnect?.error?.message)
-      if (shouldReconnect) {
-        console.log('🔄 Reconnecting in 5s...')
-        setTimeout(startWhatsAppBot, 5000)
-      } else {
-        console.log('🚫 Logged out, delete auth_info folder and restart')
+      const err = lastDisconnect?.error as Boom | undefined
+      const statusCode = err?.output?.statusCode
+      console.log('❌ WhatsApp disconnected:', err?.message || 'Unknown error')
+      console.log('   Status code:', statusCode)
+
+      if (statusCode === DisconnectReason.loggedOut) {
+        console.log('🚫 Logged out. Hapus folder auth_info dan restart.')
+        return
       }
+
+      const isConnectionLost = !statusCode || statusCode === DisconnectReason.connectionClosed || statusCode === DisconnectReason.connectionLost
+      const delay = isConnectionLost ? 3000 : 10000
+      console.log(`🔄 Reconnecting in ${delay/1000}s...\n`)
+      setTimeout(startWhatsAppBot, delay)
     }
   })
 
@@ -91,5 +105,5 @@ export async function startWhatsAppBot(): Promise<void> {
     }
   })
 
-  console.log('🤖 WhatsApp bot is ready!')
+  console.log('🤖 Lyra WhatsApp bot is ready!')
 }
